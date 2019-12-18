@@ -1,5 +1,8 @@
 import numpy
 import scipy.special
+import csv
+import matplotlib
+import matplotlib.pyplot as plt
 
 class NeuralNetwork:
     
@@ -50,12 +53,43 @@ class NeuralNetwork:
 
         return final_outputs
 
-n = NeuralNetwork(3, 3, 3, 0.3)
-print(n.query([1.0, 0.5, -1.5]))
+
+n = NeuralNetwork(784, 100, 10, 0.3)
+# print(n.query([1.0, 0.5, -1.5]))
+
+data_file_10 = str()
+with open("mnist_100.csv") as f:
+    data_file_10 = f.readlines()
+
+for i in data_file_10:
+    all_values = i.split(',')
+    inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+    targets = numpy.zeros(10) + 0.01 # 10- outputs_nodes
+
+    targets[int(all_values[0])] = 0.99
+    n.train(inputs, targets)
+
+with open("mnist_10_test.csv") as t:
+    test_data_list = t.readlines()
+
+all_values = test_data_list[0].split(',')
+print(all_values[0])
 
 
+a = n.query((numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01)
+#print(a)
+# ----------------------------------------------
+all_values = data_file_10[0].split(",")
+image_array = numpy.asfarray(all_values[1:]).reshape((28, 28))
+print(image_array[0][0])
 
+plt.imshow(image_array, cmap="Greys", interpolation='None')
+plt.show()
+# -------------------------------------------------
 
-# print(n.wih)
-# print()
-# print(n.who)
+# scaled_input = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01  # ОДНА  цифра 5 значения от 0.01 до 0.99
+# print(len(scaled_input))
+
+# targets = numpy.zeros(output_nodes) + 0.01
+# targets[int(all_values[0])] = 0.99
+# print(targets)
