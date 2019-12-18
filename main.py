@@ -54,37 +54,56 @@ class NeuralNetwork:
         return final_outputs
 
 
-n = NeuralNetwork(784, 100, 10, 0.3)
+n = NeuralNetwork(784, 200, 10, 0.1)
 # print(n.query([1.0, 0.5, -1.5]))
 
+# -----ТРЕНИРОВКА СЕТИ ------
 data_file_10 = str()
-with open("mnist_100.csv") as f:
+with open("Tren_csv\\mnist_train.csv") as f:
     data_file_10 = f.readlines()
+epochs = 5
+for e in range(epochs):
+    for i in data_file_10:
+        all_values = i.split(',')
+        inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+        targets = numpy.zeros(10) + 0.01 # 10- outputs_nodes
 
-for i in data_file_10:
-    all_values = i.split(',')
-    inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
-    targets = numpy.zeros(10) + 0.01 # 10- outputs_nodes
+        targets[int(all_values[0])] = 0.99
+        n.train(inputs, targets)
 
-    targets[int(all_values[0])] = 0.99
-    n.train(inputs, targets)
-
-with open("mnist_10_test.csv") as t:
+with open("Tren_csv\\mnist_test.csv") as t:
     test_data_list = t.readlines()
 
 all_values = test_data_list[0].split(',')
-print(all_values[0])
+#print(all_values[0])
+ # ----- TEST СЕТИ-----
+scorecard = list() # Журнал оценок работы
+for record in test_data_list:
+    all_values = record.split(',')
+    correct_label = int(all_values[0]) # истиное значение
+    print(correct_label, "Истиное значение")
 
+    inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+    outputs = n.query(inputs)
 
-a = n.query((numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01)
-#print(a)
+    label = numpy.argmax(outputs)  # индекс наибольшего значения
+    print(label, "ответ сети")
+    if (label == correct_label):
+        scorecard.append(1)
+    else:
+        scorecard.append(0)
+
+print(scorecard)
+scorecard_array = numpy.asfarray(scorecard)
+print("Эффектовность: ", (scorecard_array.sum() / scorecard_array.size) * 100, r'%')
+
 # ----------------------------------------------
-all_values = data_file_10[0].split(",")
-image_array = numpy.asfarray(all_values[1:]).reshape((28, 28))
-print(image_array[0][0])
+# all_values = data_file_10[0].split(",")
+# image_array = numpy.asfarray(all_values[1:]).reshape((28, 28))
+# print(image_array[0][0])
 
-plt.imshow(image_array, cmap="Greys", interpolation='None')
-plt.show()
+# plt.imshow(image_array, cmap="Greys", interpolation='None')
+# plt.show()
 # -------------------------------------------------
 
 # scaled_input = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01  # ОДНА  цифра 5 значения от 0.01 до 0.99
