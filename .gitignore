@@ -104,5 +104,4 @@ venv.bak/
 .mypy_cache/
 
 # CSV_with_datas
-*mnist_10_test.csv
-*mnist_100.csv
+*.csv
