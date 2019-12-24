@@ -6,6 +6,8 @@ import csv
 import matplotlib
 import matplotlib.pyplot as plt
 
+from until import png_in_bin
+
 
 class NeuralNetwork:
 
@@ -72,11 +74,11 @@ def main():
     net_train(neural_network, train_lines)
     efficiency = net_test(neural_network, tested_lines)
     print("Efficiency:", efficiency)
-    show_plt(train_lines)
+    # show_plt(train_lines)  # показать картинку 
 
 
 def net_train(neural_network, train_lines):
-    epochs = 5
+    epochs = 1
     for epoch in range(epochs):
         for train_line in train_lines:
             line_values = train_line.split(',')
@@ -126,3 +128,9 @@ def show_plt(data_file_10):
 
 
 main()
+
+
+
+
+# date_new_png = png_in_bin.png_in_str()
+

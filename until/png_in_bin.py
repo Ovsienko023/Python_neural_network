@@ -29,5 +29,3 @@ def show_png_terminal():
     print(str_data)
     
 
-print(png_in_str()[0])
-show_png_terminal()
