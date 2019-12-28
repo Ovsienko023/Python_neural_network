@@ -23,7 +23,9 @@ class NeuralNetwork:
 
         self.activation_function = lambda x: scipy.special.expit(x)  # sigmoid
         # self.who = (numpy.random.rand(self.output_nodes, self.hidden_nodes) - 0.5)
+        self.inverse_activation_function = lambda x: scipy.special.logit(x)
         pass
+
 
     def train(self, inputs_list, targets_list):
         inputs = numpy.array(inputs_list, ndmin=2).T
@@ -46,6 +48,7 @@ class NeuralNetwork:
 
         pass
 
+
     def query(self, inputs_list):
         inputs = numpy.array(inputs_list, ndmin=2).T
 
@@ -57,6 +60,24 @@ class NeuralNetwork:
 
         return final_outputs
 
+    def backquery(self, targets_list):
+        final_outputs = numpy.array(targets_list, ndmin=2).T
+
+        final_inputs = self.inverse_activation_function(final_outputs)
+        hidden_outputs -= numpy.min(hidden_outputs)
+        hidden_outputs /= numpy.max(hidden_outputs)
+        hidden_outputs *= 0.98
+        hidden_outputs += 0.01
+
+        hidden_outputs = self.inverse_activation_function(hidden_outputs)
+
+        inputs = numpy.dot(self.wih.T, hidden_inputs)
+        inputs -= numpy.min(inputs)
+        inputs /= numpy.max(inputs)
+        inputs *= 0.98
+        inputs += 0.01
+
+        return inputs
 
 def main():
     #neural_network = NeuralNetwork(784, 200, 10, 0.1)
@@ -75,7 +96,12 @@ def main():
     efficiency = net_test(neural_network, tested_lines)
     print("Efficiency:", efficiency)
     # show_plt(train_lines)  # показать картинку 
-
+    label = 0
+    targets = numpy.zeros(output_nodes) + 0.01
+    targets[label] = 0.99
+    print(targets)
+    image_data = neural_network.backquery(targets)
+    
 
 def net_train(neural_network, train_lines):
     epochs = 1

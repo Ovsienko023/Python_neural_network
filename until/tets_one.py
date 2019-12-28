@@ -1,3 +1,8 @@
+# # import click
+# from test_new.test import qwe
+
+# #print(qwe())
+# def tyu():
 import imageio
 
 
@@ -29,4 +34,15 @@ def show_png_terminal():
     print(str_data)
     
 
-show_png_terminal()
+#print(type(png_in_str()[0]))
+
+import numpy
+import matplotlib
+import matplotlib.pyplot as plt
+image_data = png_in_str()[1]
+image_data = [int(i) for i in image_data]
+image_data = numpy.array(image_data)
+
+print(image_data)
+
+matplotlib.pyplot.imshow(image_data.reshape(28, 28), cmap='Greys', interpolation='None')
